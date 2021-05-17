@@ -1,0 +1,13 @@
+{
+  "name": "simplist-admin",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "dotenv": "^9.0.2",
+    "firebase-admin": "^9.8.0"
+  }
+}
