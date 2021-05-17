@@ -1,21 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Provider as PaperProvider } from "react-native-paper";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import ListScreen from "./src/screens/ListScreen";
+import LoginScreen from "./src/screens/LoginScreen";
+import RegisterScreen from "./src/screens/RegisterScreen";
+import MainScreen from "./src/screens/MainScreen";
+
+import firebase from "./api/firebase";
+
+const Stack = createStackNavigator();
+
+const screens = [
+  { name: "Login", component: LoginScreen },
+  { name: "Register", component: RegisterScreen },
+  { name: "List", component: ListScreen },
+  { name: "Main", component: MainScreen },
+];
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <PaperProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName={screens[0].name} headerMode="none">
+          {screens.map(({ name, component }) => <Stack.Screen key={name} name={name} component={component} />)}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
