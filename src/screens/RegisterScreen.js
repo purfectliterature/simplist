@@ -1,17 +1,43 @@
-import React, { useState } from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
+import React, { useState, useRef } from "react";
+import { Pressable, StyleSheet, Text, Keyboard } from "react-native";
 import { Button, TextInput } from "react-native-paper";
+import { CommonActions } from "@react-navigation/native";
 
 import Screen from "../components/Screen";
 import Brand from "../components/Brand";
 
 import colors from "../constants/colors";
 
+import * as Authentication from "../../api/auth";
+
 export default ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
+  const emailTextInput = useRef();
+  const passwordTextInput = useRef();
+
+  const handleRegister = () => {
+    Keyboard.dismiss();
+    setIsRegisterLoading(true);
+
+    Authentication.createAccount(
+      { name: username, email, password },
+      (user) => navigation.dispatch(CommonActions.reset({
+        index: 0,
+        routes: [{
+          name: "List",
+          params: { name: user.displayName }
+        }]
+      })),
+      (error) => {
+        setIsRegisterLoading(false);
+        return console.error(error);
+      }
+    );
+  }
 
   return (
     <Screen scrollable>
@@ -27,10 +53,15 @@ export default ({ navigation }) => {
         style={{ marginTop: 10 }}
         value={username}
         onChangeText={setUsername}
+        autoCapitalize="words"
+        returnKeyType="next"
+        onSubmitEditing={() => emailTextInput.current.focus()}
+        blurOnSubmit={false}
         left={<TextInput.Icon name="account" color={username ? colors.primary : colors.secondaryLight} />}
       />
 
       <TextInput
+        ref={emailTextInput}
         mode="outlined"
         label="Email address"
         placeholder="e.g., josh@example.com"
@@ -38,10 +69,15 @@ export default ({ navigation }) => {
         style={{ marginTop: 10 }}
         value={email}
         onChangeText={setEmail}
+        autoCapitalize="none"
+        returnKeyType="next"
+        onSubmitEditing={() => passwordTextInput.current.focus()}
+        blurOnSubmit={false}
         left={<TextInput.Icon name="at" color={email ? colors.primary : colors.secondaryLight} />}
       />
 
       <TextInput
+        ref={passwordTextInput}
         mode="outlined"
         label="Password"
         placeholder="e.g., who knows?"
@@ -50,6 +86,7 @@ export default ({ navigation }) => {
         onChangeText={setPassword}
         left={<TextInput.Icon name="form-textbox-password" color={password ? colors.primary : colors.secondaryLight} />}
         secureTextEntry={!isPasswordVisible}
+        autoCapitalize="none"
         right={<TextInput.Icon name={isPasswordVisible ? "eye-off" : "eye"} onPress={() => setIsPasswordVisible((state) => !state)} />}
       />
 
@@ -57,7 +94,9 @@ export default ({ navigation }) => {
         mode="contained"
         style={{ marginTop: 20, borderRadius: 10 }}
         contentStyle={{ paddingVertical: 5 }}
-        onPress={() => {}}
+        onPress={handleRegister}
+        loading={isRegisterLoading}
+        disabled={isRegisterLoading}
       >Create account</Button>
 
       <Text style={{ color: colors.secondaryLight, paddingHorizontal: 10, paddingTop: 10 }}>

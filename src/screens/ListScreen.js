@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { StyleSheet, View, SectionList, Text, StatusBar, SafeAreaView, TextInput } from "react-native";
 import { Checkbox, IconButton, List, Menu } from "react-native-paper";
+import { CommonActions } from "@react-navigation/native";
 
 import Screen from "../components/Screen";
 import Brand from "../components/Brand";
+
+import * as Authentication from "../../api/auth";
 
 class Task {
   constructor(subject, completed) {
@@ -34,6 +37,18 @@ const lists = [
 export default ({ navigation }) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [newTask, setNewTask] = useState("");
+
+  const handleLogout = () => {
+    setIsMenuVisible(false);
+
+    Authentication.signOut(
+      () => navigation.dispatch(CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Login" }]
+      })),
+      console.error
+    );
+  }
 
   const renderList = ({ item, index, section, separators }) => {
     return (
@@ -83,7 +98,7 @@ export default ({ navigation }) => {
                   />
                 }
               >
-                <Menu.Item onPress={() => {}} title="Log out" />
+                <Menu.Item onPress={handleLogout} title="Log out" />
               </Menu>
             </View>
           </View>
