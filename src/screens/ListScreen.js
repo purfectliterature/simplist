@@ -2,29 +2,37 @@ import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, SectionList, TextInput } from "react-native";
 import { Checkbox, IconButton, List, Menu } from "react-native-paper";
 import { CommonActions } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
 
 import Screen from "../components/Screen";
+
+import * as StoreCommons from "../../store/tasks";
 
 import * as Authentication from "../../api/auth";
 import * as Tasks from "../../api/tasks";
 
 export default ({ navigation }) => {
+  const dispatch = useDispatch();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [newTask, setNewTask] = useState("");
   const [tasks, setTasks] = useState({});
   const [sectionedTasks, setSectionedTasks] = useState([]);
   const [userId, setUserId] = useState(Authentication.getCurrentUserId());
   const newTaskRef = useRef();
+  const tasksFromStore = useSelector(StoreCommons.getTasks);
 
   useEffect(() => {
-    return Tasks.subscribe(userId, setTasks);
+    return Tasks.subscribe(userId, (tasks) => {
+      dispatch(StoreCommons.populateTask(tasks));
+      setTasks(tasks);
+    });
   }, []);
 
   useEffect(() => {
     if (tasks) {
       const sortedTasks = [];
 
-      const tasksArray = Object.values(tasks);
+      const tasksArray = Object.values(tasksFromStore);
       const completedTasks = tasksArray.filter((task) => task.completed);
       const pendingTasks = tasksArray.filter((task) => !task.completed);
 

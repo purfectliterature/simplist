@@ -3,13 +3,18 @@ import { LogBox } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { Provider as ReduxProvider } from 'react-redux';
 
 import ListScreen from "./src/screens/ListScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import MainScreen from "./src/screens/MainScreen";
 
+import configureStore from "./store";
+
 import firebase from "./api/firebase";
+
+const { store } = configureStore();
 
 const Stack = createStackNavigator();
 
@@ -27,12 +32,14 @@ LogBox.ignoreLogs(["Setting a timer for a long period of"]);
 
 export default function App() {
   return (
-    <PaperProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName={screens[0].name} headerMode="none">
-          {screens.map(({ name, component }) => <Stack.Screen key={name} name={name} component={component} />)}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <ReduxProvider store={store}>
+      <PaperProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName={screens[0].name} headerMode="none">
+            {screens.map(({ name, component }) => <Stack.Screen key={name} name={name} component={component} />)}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </ReduxProvider>
   );
 }
