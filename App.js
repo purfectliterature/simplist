@@ -1,4 +1,5 @@
 import React from 'react';
+import { LogBox } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -18,6 +19,11 @@ const screens = [
   { name: "List", component: ListScreen },
   { name: "Main", component: MainScreen },
 ];
+
+// unfixable "bug" due to Firebase JS SDK's use of long setTimeout
+// for subscribing functions, e.g., firebase.database().Reference.on()
+// read more at https://github.com/facebook/react-native/issues/12981
+LogBox.ignoreLogs(["Setting a timer for a long period of"]);
 
 export default function App() {
   return (
