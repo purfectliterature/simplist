@@ -5,8 +5,9 @@ export default (props) => {
   if (props.scrollable) {
     return (
       <SafeAreaView style={{
-        paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0
-      }}>
+        paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
+        ...props.style
+      }} {...props}>
         <ScrollView
           contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 20 }}
           keyboardShouldPersistTaps="always"
@@ -20,8 +21,9 @@ export default (props) => {
       <SafeAreaView style={{
         paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
         paddingBottom: 20,
-        paddingHorizontal: 20
-      }}>
+        paddingHorizontal: 20,
+        ...props.style
+      }} {...props}>
           {props.children}
       </SafeAreaView>
     );
