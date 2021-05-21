@@ -4,6 +4,7 @@ import { Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Provider as ReduxProvider } from 'react-redux';
+import { PersistGate } from "redux-persist/integration/react";
 
 import ListScreen from "./src/screens/ListScreen";
 import LoginScreen from "./src/screens/LoginScreen";
@@ -14,7 +15,7 @@ import configureStore from "./store";
 
 import firebase from "./api/firebase";
 
-const { store } = configureStore();
+const { store, persistor } = configureStore();
 
 const Stack = createStackNavigator();
 
@@ -33,13 +34,15 @@ LogBox.ignoreLogs(["Setting a timer for a long period of"]);
 export default function App() {
   return (
     <ReduxProvider store={store}>
-      <PaperProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName={screens[0].name} headerMode="none">
-            {screens.map(({ name, component }) => <Stack.Screen key={name} name={name} component={component} />)}
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PaperProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <PaperProvider>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName={screens[0].name} headerMode="none">
+              {screens.map(({ name, component }) => <Stack.Screen key={name} name={name} component={component} />)}
+            </Stack.Navigator>
+          </NavigationContainer>
+        </PaperProvider>
+      </PersistGate>
     </ReduxProvider>
   );
 }
