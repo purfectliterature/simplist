@@ -14,10 +14,10 @@ import firebase from "./api/firebase";
 const Stack = createStackNavigator();
 
 const screens = [
+  { name: "Main", component: MainScreen },
   { name: "Login", component: LoginScreen },
   { name: "Register", component: RegisterScreen },
   { name: "List", component: ListScreen },
-  { name: "Main", component: MainScreen },
 ];
 
 // unfixable "bug" due to Firebase JS SDK's use of long setTimeout
