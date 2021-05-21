@@ -32,3 +32,7 @@ export const signOut = async (onSuccess, onError) => {
     return onError(error);
   }
 }
+
+export const getCurrentUserId = () => auth.currentUser ? auth.currentUser.uid : null;
+
+export const getCurrentUserName = () => auth.currentUser ? auth.currentUser.displayName : null;
