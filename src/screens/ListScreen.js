@@ -44,6 +44,7 @@ export default ({ navigation }) => {
   }, [tasks]);
 
   const handleLogout = () => {
+    dispatch(StoreCommons.resetTasks());
     setIsMenuVisible(false);
 
     Authentication.signOut(
