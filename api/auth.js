@@ -36,3 +36,11 @@ export const signOut = async (onSuccess, onError) => {
 export const getCurrentUserId = () => auth.currentUser ? auth.currentUser.uid : null;
 
 export const getCurrentUserName = () => auth.currentUser ? auth.currentUser.displayName : null;
+
+export const setOnAuthStateChanged = (onUserAuthenticated, onUserNotFound) => auth.onAuthStateChanged((user) => {
+  if (user) {
+    return onUserAuthenticated(user);
+  } else {
+    return onUserNotFound(user);
+  }
+});
